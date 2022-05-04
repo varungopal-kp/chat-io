@@ -1,18 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
+import LoginPage from "./login";
+import OtpPage from "./otp";
 
-export default function index() {
-  require('./style.css')
+export default function Index() {
+  require("./style.css");
+  const [page, setPage] = useState("loginPage");
 
-  return (
-    <div className="login-page">
-      <div className="form">
-          <p>Chat</p>
-        <form className="login-form">
-          <input type="number" placeholder="Phone Number" name="phone" />
+  const handlePage = (page) => {
+    setPage(page);
+  };
 
-          <button type="submit">Join</button>
-        </form>
-      </div>
-    </div>
-  );
+  if (page == "loginPage") {
+    return <LoginPage handlePage={handlePage}/>;
+  } else {
+    return <OtpPage handlePage={handlePage}/>;
+  }
 }
