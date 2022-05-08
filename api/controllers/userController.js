@@ -1,11 +1,12 @@
 const User = require("../models/User");
+const { errorResponse } = require("../helpers/errorResponseHandler");
 
 exports.auth = async (req, res, next) => {
   let params = req.body;
   try {
     const user = await User.findOne({ phone: params.phone });
     params.otp = otpGenerator();
-
+        
     if (user) {
       user.otp = params.otp;
       user.save();
@@ -15,10 +16,7 @@ exports.auth = async (req, res, next) => {
 
     return res.status(200).json({ otp: params.otp });
   } catch (error) {
-    return res.status(400).send({
-      error: error.toString(),
-      success: false,
-    });
+    return errorResponse(res, error);
   }
 };
 
