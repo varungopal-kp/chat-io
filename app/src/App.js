@@ -1,7 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LoginPage from "./containers/LoginPage";
 import HomePage from "./containers/HomePage";
-import "./App.css"; 
+import "./App.css";
+import "react-notifications/lib/notifications.css";
+import { NotificationContainer } from "react-notifications";
 
 function App() {
   return (
@@ -11,6 +13,7 @@ function App() {
           <Route exact path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
+        <NotificationContainer />
       </div>
     </Router>
   );

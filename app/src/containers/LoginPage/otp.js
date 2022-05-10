@@ -1,16 +1,39 @@
-import React from 'react'
+import React from "react";
+import { Form, Field } from "react-final-form";
+import { useDispatch } from "react-redux";
+import { verifyOtp } from "../../redux/actions/auth";
 
 export default function Otp(props) {
+  const dispatch = useDispatch();
+
+  const onSubmit = (inputs) => {
+    try {
+      dispatch(verifyOtp(inputs));
+    } catch (error) {}
+  };
+
   return (
     <div className="login-page">
       <div className="form">
-        <p>Chat</p>
-        <form className="login-form">
-          <input type="number" placeholder="Enter OTP" name="otp" />
+        <p>OTP</p>
+        <Form
+          className="login-form"
+          onSubmit={onSubmit}
+          render={({ handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Field
+                name="otp"
+                component="input"
+                type="number"
+                placeholder="OTP"
+                required
+              />
 
-          <button type="submit" onClick={e=>props.handlePage('otpPage')}>Confirm</button>
-        </form>
+              <button type="submit">Join</button>
+            </form>
+          )}
+        />
       </div>
     </div>
-  )
+  );
 }

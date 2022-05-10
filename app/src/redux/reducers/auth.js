@@ -1,7 +1,7 @@
 import * as type from "../constants/auth";
 
 const initialState = {
-  auth: {},
+  auth: { otp: "" },
   loading: false,
   error: null,
 };
@@ -16,7 +16,7 @@ export default function auth(state = initialState, action) {
     case type.LOGIN_SUCCESS:
       return {
         ...state,
-        auth: action.payload,
+        auth: action.payload.data,
         loading: false,
       };
     case type.LOGIN_FAILED:
@@ -25,6 +25,23 @@ export default function auth(state = initialState, action) {
         loading: false,
         error: action.payload,
       };
+      
+      case type.OTP_VERIFY_REQUEST:
+        return {
+          ...state,
+          loading: true,
+        };
+      case type.OTP_VERIFY_SUCCESS:
+        return {
+          ...state,
+          loading: false,
+        };
+      case type.OTP_VERIFY_FAILED:
+        return {
+          ...state,
+          loading: false,
+          error: action.payload,
+        };
     default:
       return state;
   }
