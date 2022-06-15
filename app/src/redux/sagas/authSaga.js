@@ -1,6 +1,11 @@
 import { put, takeEvery } from "redux-saga/effects";
 import axios from "../../utilities/axios-config";
-import { loginSuccess, loginError } from "../actions/auth";
+import {
+  loginSuccess,
+  loginError,
+  verifyOtpError,
+  verifyOtpSuccess,
+} from "../actions/auth";
 import { LOGIN_REQUEST, OTP_VERIFY_REQUEST } from "../constants/auth";
 
 function* loginCall({ payload }) {
@@ -21,17 +26,17 @@ function* loginCall({ payload }) {
 
 function* verifyCall({ payload }) {
   try {
-    const login = yield axios
-      .post(`verifyOtp`, payload)
+    const token = yield axios
+      .post(`auth/verify-otp`, payload)
       .then((res) => {
         return res;
       })
       .catch(function (response) {
         return Promise.reject(response);
       });
-    yield put(loginSuccess(login));
+    yield put(verifyOtpSuccess(token));
   } catch (error) {
-    yield put(loginError(error));
+    yield put(verifyOtpError(error));
   }
 }
 

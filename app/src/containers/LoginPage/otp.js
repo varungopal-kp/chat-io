@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, Field } from "react-final-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, connect } from "react-redux";
 import { verifyOtp } from "../../redux/actions/auth";
+import { NotificationManager } from "react-notifications";
 
-export default function Otp(props) {
+export function Otp(props) {
   const dispatch = useDispatch();
 
   const onSubmit = (inputs) => {
     try {
+      const userId = props.auth.auth.userId;
+      inputs.userId = userId;
       dispatch(verifyOtp(inputs));
     } catch (error) {}
   };
+
+  useEffect(() => {
+    const _token = props.auth._token;
+    if (_token) {
+      NotificationManager.success(`Login Successful`);
+      localStorage.setItem("_token", _token);
+      window.location.href = "/";
+    }
+  }, [props.auth._token]);
 
   return (
     <div className="login-page">
@@ -37,3 +49,7 @@ export default function Otp(props) {
     </div>
   );
 }
+
+export default connect((state) => ({
+  auth: state.auth,
+}))(Otp);

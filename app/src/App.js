@@ -3,6 +3,7 @@ import LoginPage from "./containers/LoginPage";
 import HomePage from "./containers/HomePage";
 import "./App.css";
 import "react-notifications/lib/notifications.css";
+import { PrivateRoute } from "./hoc/PrivateRoute";
 import { NotificationContainer } from "react-notifications";
 
 function App() {
@@ -10,7 +11,11 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route exact path="/" element={<HomePage />} />
+          <Route
+            path="/"
+            name="Home"
+            element={<PrivateRoute Component={HomePage} />}
+          />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
         <NotificationContainer />
