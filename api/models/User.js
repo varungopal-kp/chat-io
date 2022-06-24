@@ -8,6 +8,12 @@ const UserSchema = new mongoose.Schema({
   otp: {
     type: Number,
   },
+  socketId: {
+    type: String,
+  },
+  _token: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

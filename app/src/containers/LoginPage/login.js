@@ -15,8 +15,10 @@ export function Login(props) {
 
   useEffect(() => {
     const otp = props.auth.auth.otp;    
+    const userId = props.auth.auth.userId;    
     if (otp) {
       NotificationManager.success(`OTP: ${otp}`);
+      localStorage.setItem("user", userId);
       props.handlePage("otpPage");
     }
   }, [props.auth.auth.otp]);

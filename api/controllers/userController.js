@@ -1,4 +1,6 @@
+const mongoose = require("mongoose");
 const User = require("../models/User");
+const Chat = require("../models/Chat");
 const { errorResponse } = require("../helpers/errorResponseHandler");
 const jwt = require("jsonwebtoken");
 
@@ -35,6 +37,8 @@ exports.verifyOtp = async (req, res, next) => {
           expiresIn: 604800, //1 week
         }
       );
+      user._token = token;
+      user.save();
       return res.status(200).json({
         success: true,
         message: "Successfully Logged In. ",
@@ -53,3 +57,33 @@ exports.verifyOtp = async (req, res, next) => {
 function otpGenerator() {
   return Math.floor(1000 + Math.random() * 9000);
 }
+
+exports.getAll = async (req, res, next) => {
+  try {
+    const userId = req.auth.data._id;
+    const users = await User.find({ _id: { $ne: userId } }).lean();
+    for await (const _a of users) {
+      const latestChat = await Chat.findOne({
+        $or: [
+          {
+            sender: userId,
+            receiver: _a._id,
+          },
+          {
+            sender: _a._id,
+            receiver: userId,
+          },
+        ],
+      }).sort({ createdAt: -1 });
+      _a.chat = latestChat;
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Successfull",
+      data: users,
+    });
+  } catch (error) {
+    return errorResponse(res, error);
+  }
+};

@@ -1,10 +1,13 @@
 import * as type from "../constants/auth";
 
+const _token = localStorage.getItem("_token") || false;
+const user = localStorage.getItem("user") || false;
+
 const initialState = {
-  auth: { otp: "", userId: null },
+  auth: { otp: "", userId: user },
   loading: false,
   error: null,
-  _token: false,
+  _token: _token,
 };
 
 export default function auth(state = initialState, action) {
@@ -33,7 +36,7 @@ export default function auth(state = initialState, action) {
         loading: true,
         _token: false,
       };
-    case type.OTP_VERIFY_SUCCESS:      
+    case type.OTP_VERIFY_SUCCESS:
       return {
         ...state,
         loading: false,
