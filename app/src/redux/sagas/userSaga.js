@@ -19,8 +19,8 @@ function* userCall({ payload }) {
   }
 }
 
-function* authSaga() {
+function* userSaga() {
   yield takeEvery(GET_USER_REQUEST, userCall);
 }
 
-export default authSaga;
+export default userSaga;

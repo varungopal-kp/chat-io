@@ -12,5 +12,6 @@ router.get('/', function(req, res, next) {
 
 router.get('/users/getAll', userController.getAll);
 router.get('/chats/getUserChat/:id', chatController.getUserChat);
+router.post('/chats', chatController.chat);
 
 module.exports = router;

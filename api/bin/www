@@ -41,13 +41,19 @@ io.on("connection", (socket) => {
       connectedUsers[socket.user],
       connectedUsers[socket.receiver],
     ].filter((_a) => _a);
-    if (broadcastUsers.length) {     
+    if (broadcastUsers.length) {
+      const receiveData = {
+        sender: socket.user,
+        receiver: socket.receiver,
+        message: socket.message,
+        createdAt: new Date().toISOString(),
+      };
       if (broadcastUsers.length == 2) {
         io.to(broadcastUsers[0].id)
           .to(broadcastUsers[1].id)
-          .emit("receive_msg", socket.message);
+          .emit("receive_msg", receiveData);
       } else {
-        io.to(broadcastUsers[0].id).emit("receive_msg", socket.message);
+        io.to(broadcastUsers[0].id).emit("receive_msg", receiveData);
       }
     }
   });

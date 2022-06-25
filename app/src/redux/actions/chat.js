@@ -18,3 +18,23 @@ export function getChatError(data) {
     payload: data,
   };
 }
+
+export function chatSend(data) {
+  
+  return {
+    type: type.CHAT_REQUEST,
+    payload: data,
+  };
+}
+export function chatSuccess(data) {
+  return {
+    type: type.CHAT_SUCCESS,
+    payload: data,
+  };
+}
+export function chatError(data) {
+  return {
+    type: type.CHAT_FAILED,
+    payload: data,
+  };
+}

@@ -3,12 +3,12 @@ import "./home.css";
 import ChatBox from "../../components/ChatBox";
 import { useDispatch, connect } from "react-redux";
 import { getUsers } from "../../redux/actions/user";
-import { getChats } from "../../redux/actions/chat";
+import { getChats, chatSend } from "../../redux/actions/chat";
 
 export function Index(props) {
   const dispatch = useDispatch();
 
-  useEffect(() => {    
+  useEffect(() => {
     dispatch(getUsers());
   }, []);
 
@@ -16,11 +16,16 @@ export function Index(props) {
     dispatch(getChats(id));
   };
 
+  const handleChatSend = (data) => {
+    dispatch(chatSend(data));
+  };
+
   return (
     <ChatBox
       users={props.users}
       getUserChats={getUserChats}
       chats={props.chats}
+      handleChatSend={handleChatSend}
     />
   );
 }

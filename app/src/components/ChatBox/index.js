@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 
 const user = localStorage.getItem("user");
@@ -8,20 +8,35 @@ socket.on("connect", () => {
   console.log(socket.id);
 });
 
-socket.on("receive_msg", (msg) => {
-  console.log(msg);
-});
-
 export default function Index(props) {
   const [message, updateMessage] = useState("");
   const [receiver, updateReceiver] = useState("");
   const [chatList, updateChatList] = useState([]);
+  const chatListRef = useRef(chatList);
 
-  useEffect(() => {    
+  useEffect(() => {
     updateChatList(props.chats);
   }, [props.chats]);
 
+  useEffect(() => {
+    chatListRef.current = chatList;
+  });
+
+  useEffect(() => {
+    socket.on("receive_msg", (data) => {
+      const newChatList = [...chatListRef.current];      
+      newChatList.push(data);
+      updateChatList(newChatList)
+    });
+  });
+
   const sendMessage = () => {
+    const data = {
+      sender: user,
+      receiver,
+      message,
+    };
+    props.handleChatSend(data);
     socket.emit("send_msg", { message, user, receiver });
     updateMessage("");
   };
@@ -32,7 +47,7 @@ export default function Index(props) {
   };
 
   const usersList = props.users;
-console.log(chatList)
+  
   return (
     <div className="container">
       <h3 className=" text-center">Chat i/o</h3>
@@ -90,26 +105,40 @@ console.log(chatList)
           </div>
           <div className="mesgs">
             <div className="msg_history">
-              <div className="incoming_msg">
-                <div className="incoming_msg_img">
-                  <img
-                    src="https://ptetutorials.com/images/user-profile.png"
-                    alt="sunil"
-                  />
-                </div>
-                <div className="received_msg">
-                  <div className="received_withd_msg">
-                    <p>Test which is a new approach to have all solutions</p>
-                    <span className="time_date"> 11:01 AM | June 9</span>
-                  </div>
-                </div>
-              </div>
-              <div className="outgoing_msg">
-                <div className="sent_msg">
-                  <p>Test which is a new approach to have all solutions</p>
-                  <span className="time_date"> 11:01 AM | June 9</span>
-                </div>
-              </div>
+              {chatList.length
+                ? chatList.map((_a) => {
+                    return (
+                      <>
+                        {_a.sender == user ? (
+                          <div className="outgoing_msg">
+                            <div className="sent_msg">
+                              <p>{_a.message}</p>
+                              <span className="time_date"> {_a.createdAt}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="incoming_msg">
+                            <div className="incoming_msg_img">
+                              <img
+                                src="https://ptetutorials.com/images/user-profile.png"
+                                alt="sunil"
+                              />
+                            </div>
+                            <div className="received_msg">
+                              <div className="received_withd_msg">
+                                <p>{_a.message}</p>
+                                <span className="time_date">
+                                  {" "}
+                                  {_a.createdAt}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    );
+                  })
+                : ""}
             </div>
             <div className="type_msg">
               <div className="input_msg_write">
@@ -118,11 +147,14 @@ console.log(chatList)
                   className="write_msg"
                   placeholder="Type a message"
                   onChange={(e) => updateMessage(e.target.value)}
+                  value={message}
+                  disabled={!receiver}
                 />
                 <button
                   className="msg_send_btn"
                   type="button"
                   onClick={(e) => sendMessage()}
+                  disabled={!receiver || !message}
                 >
                   <i className="fa fa-paper-plane-o" aria-hidden="true"></i>
                 </button>
