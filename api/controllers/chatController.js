@@ -19,7 +19,7 @@ exports.getUserChat = async (req, res, next) => {
           receiver: userId,
         },
       ],
-    }).sort({ createdAt: -1 });
+    }).sort({ createdAt: 1 });
     return res.status(200).json({
       success: true,
       message: "Successfull",

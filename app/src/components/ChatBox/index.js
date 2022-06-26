@@ -24,11 +24,11 @@ export default function Index(props) {
 
   useEffect(() => {
     socket.on("receive_msg", (data) => {
-      const newChatList = [...chatListRef.current];      
+      const newChatList = [...chatListRef.current];
       newChatList.push(data);
-      updateChatList(newChatList)
+      updateChatList(newChatList);
     });
-  });
+  }, []);
 
   const sendMessage = () => {
     const data = {
@@ -47,7 +47,7 @@ export default function Index(props) {
   };
 
   const usersList = props.users;
-  
+
   return (
     <div className="container">
       <h3 className=" text-center">Chat i/o</h3>
@@ -64,9 +64,10 @@ export default function Index(props) {
                     type="text"
                     className="search-bar"
                     placeholder="Search"
+                    disabled
                   />
                   <span className="input-group-addon">
-                    <button type="button">
+                    <button type="button" disabled>
                       <i className="fa fa-search" aria-hidden="true"></i>
                     </button>
                   </span>
@@ -77,7 +78,11 @@ export default function Index(props) {
               {usersList.length
                 ? usersList.map((_a, i) => (
                     <div
-                      className="chat_list active_chat"
+                      className={
+                        _a._id == receiver
+                          ? "chat_list active_chat"
+                          : "chat_list"
+                      }
                       key={i}
                       onClick={(e) => handleChatListClick(_a._id)}
                     >
@@ -104,11 +109,11 @@ export default function Index(props) {
             </div>
           </div>
           <div className="mesgs">
-            <div className="msg_history">
+            <div className="msg_history" id="msg_history">
               {chatList.length
                 ? chatList.map((_a) => {
                     return (
-                      <>
+                      <React.Fragment key={_a._id}>
                         {_a.sender == user ? (
                           <div className="outgoing_msg">
                             <div className="sent_msg">
@@ -135,7 +140,7 @@ export default function Index(props) {
                             </div>
                           </div>
                         )}
-                      </>
+                      </React.Fragment>
                     );
                   })
                 : ""}
