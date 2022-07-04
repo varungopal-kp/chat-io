@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import Logout from "../Logout";
 import { io } from "socket.io-client";
 
 const user = localStorage.getItem("user");
@@ -46,12 +47,18 @@ export default function Index(props) {
     props.getUserChats(id);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
+
   const usersList = props.users;
 
   return (
     <div className="container">
-      <h3 className=" text-center">Chat i/o</h3>
+      <h3 className=" text-center">Chat i/o </h3>
       <div className="messaging">
+        <Logout handleLogout={handleLogout} />
         <div className="inbox_msg">
           <div className="inbox_people">
             <div className="headind_srch">
@@ -90,14 +97,18 @@ export default function Index(props) {
                         <div className="chat_img">
                           <img
                             src="https://ptetutorials.com/images/user-profile.png"
-                            alt="sunil"
+                            alt="pro"
                           />
                         </div>
                         <div className="chat_ib">
                           <h5>
                             {_a.phone}{" "}
                             <span className="chat_date">
-                              {_a.chat ? _a.chat.createdAt : ""}
+                              {_a.chat
+                                ? new Date(
+                                    _a.chat.createdAt
+                                  ).toLocaleDateString()
+                                : ""}
                             </span>
                           </h5>
                           <p>{_a.chat ? _a.chat.message : ""}</p>
@@ -118,7 +129,10 @@ export default function Index(props) {
                           <div className="outgoing_msg">
                             <div className="sent_msg">
                               <p>{_a.message}</p>
-                              <span className="time_date"> {_a.createdAt}</span>
+                              <span className="time_date">
+                                {" "}
+                                {new Date(_a.createdAt).toLocaleDateString()}
+                              </span>
                             </div>
                           </div>
                         ) : (
@@ -133,8 +147,7 @@ export default function Index(props) {
                               <div className="received_withd_msg">
                                 <p>{_a.message}</p>
                                 <span className="time_date">
-                                  {" "}
-                                  {_a.createdAt}
+                                  {new Date(_a.createdAt).toLocaleDateString()}
                                 </span>
                               </div>
                             </div>

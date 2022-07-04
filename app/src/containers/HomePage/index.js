@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "./home.css";
 import ChatBox from "../../components/ChatBox";
 import { useDispatch, connect } from "react-redux";
 import { getUsers } from "../../redux/actions/user";
