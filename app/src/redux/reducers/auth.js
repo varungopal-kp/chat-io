@@ -2,9 +2,10 @@ import * as type from "../constants/auth";
 
 const _token = localStorage.getItem("_token") || false;
 const user = localStorage.getItem("user") || false;
+const phone = localStorage.getItem("phone") || false;
 
 const initialState = {
-  auth: { otp: "", userId: user },
+  auth: { otp: "", userId: user, phone: phone },
   loading: false,
   error: null,
   _token: _token,

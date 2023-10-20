@@ -3,7 +3,8 @@ import Logout from "../Logout";
 import { io } from "socket.io-client";
 
 const user = localStorage.getItem("user");
-const socket = io("http://localhost:5000", { query: `user=${user}` });
+
+const socket = io(process.env.REACT_APP_API_HOST, { query: `user=${user}` });
 
 socket.on("connect", () => {
   console.log(socket.id);
@@ -58,6 +59,9 @@ export default function Index(props) {
     <div className="container">
       <h3 className=" text-center">Chat i/o </h3>
       <div className="messaging">
+        <div style={{ textAlign: "center", color: "cornflowerblue" }}>
+          {props?.userPhone}
+        </div>{" "}
         <Logout handleLogout={handleLogout} />
         <div className="inbox_msg">
           <div className="inbox_people">

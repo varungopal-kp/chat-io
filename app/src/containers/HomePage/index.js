@@ -25,6 +25,7 @@ export function Index(props) {
       getUserChats={getUserChats}
       chats={props.chats}
       handleChatSend={handleChatSend}
+      userPhone={props.auth?.auth?.phone}
     />
   );
 }

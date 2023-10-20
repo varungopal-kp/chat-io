@@ -22,41 +22,14 @@ app.set("port", port);
 var server = http.createServer(app);
 
 var socket = require("socket.io");
-let io = socket(server, {
+var io = socket(server, {
   cors: {
     origin: "*",
   },
 });
-let connectedUsers = {};
-io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
-  const user = socket.handshake.query.user;
-  if (user) {
-    connectedUsers[user] = socket;
-  }
 
-  socket.on("send_msg", (socket) => {
-    let broadcastUsers = [
-      connectedUsers[socket.user],
-      connectedUsers[socket.receiver],
-    ].filter((_a) => _a);
-    if (broadcastUsers.length) {
-      const receiveData = {
-        sender: socket.user,
-        receiver: socket.receiver,
-        message: socket.message,
-        createdAt: new Date().toISOString(),
-      };
-      if (broadcastUsers.length == 2) {
-        io.to(broadcastUsers[0].id)
-          .to(broadcastUsers[1].id)
-          .emit("receive_msg", receiveData);
-      } else {
-        io.to(broadcastUsers[0].id).emit("receive_msg", receiveData);
-      }
-    }
-  });
-});
+require('../sockets/socket')(io);
+
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -121,3 +94,5 @@ function onListening() {
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   debug("Listening on " + bind);
 }
+
+module.exports = server;

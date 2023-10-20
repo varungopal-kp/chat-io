@@ -17,8 +17,11 @@ exports.auth = async (req, res, next) => {
       await User.create(params);
     }
 
-    return res.status(200).json({ otp: params.otp, userId: user._id });
+    return res
+      .status(200)
+      .json({ otp: params.otp, userId: user._id, phone: params.phone });
   } catch (error) {
+    console.error(error);
     return errorResponse(res, error);
   }
 };
@@ -60,9 +63,9 @@ function otpGenerator() {
 
 exports.getAll = async (req, res, next) => {
   try {
-    const userId = req.auth.data._id;
+    const userId = req.auth?.data?._id;
     const users = await User.find({ _id: { $ne: userId } }).lean();
-    for await (const _a of users) {
+    for (const _a of users) {
       const latestChat = await Chat.findOne({
         $or: [
           {

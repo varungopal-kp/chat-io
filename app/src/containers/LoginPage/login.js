@@ -16,9 +16,11 @@ export function Login(props) {
   useEffect(() => {
     const otp = props.auth.auth.otp;    
     const userId = props.auth.auth.userId;    
+    const phone = props.auth.auth.phone;    
     if (otp) {
       NotificationManager.success(`OTP: ${otp}`);
       localStorage.setItem("user", userId);
+      localStorage.setItem("phone", phone);
       props.handlePage("otpPage");
     }
   }, [props.auth.auth.otp]);

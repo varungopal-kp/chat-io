@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 module.exports.isAuthorized = function (req, res, next) {
-   // return next();
+  // return next();
   try {
     const authHeaders = req.headers["authorization"];
     const token = authHeaders && authHeaders.split(" ")[1];
@@ -16,8 +16,8 @@ module.exports.isAuthorized = function (req, res, next) {
     jwt.verify(token, privateKey, function (err, decoded) {
       if (err) return res.sendStatus(403);
       req.auth = decoded;
+      next();
     });
-    next();
   } catch (error) {
     return res.status(401).json({
       success: false,

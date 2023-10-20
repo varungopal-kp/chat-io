@@ -15,6 +15,7 @@ var connectDB = require("./config/database");
 
 var app = express();
 
+
 connectDB();
 
 // view engine setup
@@ -29,8 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/auth", authRouter);
-app.use("/api",authMiddleware.isAuthorized, apiRouter );
-
+app.use("/api", authMiddleware.isAuthorized, apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
